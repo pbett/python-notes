@@ -43,7 +43,7 @@ acube.convert_units("Celsius")
 
 
 #----------------------------------------------
-# Set value range
+# Set value range to define the disctete levels in the plot:
 vrange = [-30, 35]
 vstep  = 5.0
 vmid   = 0.0   # Needed if skewing the colour palette!
@@ -53,12 +53,14 @@ levels = np.arange(vrange[0], vrange[1]+vstep, vstep)
 
 
 #----------------------------------------------
-# Set colour palette:
+# Set colour palette:   (also depends on the levels array above)
+# (See https://matplotlib.org/examples/color/colormaps_reference.html)
 cpal    = "RdBu_r"
-extendcolbar = "both"
 badcol  = "green"
 undercol= "magenta"
 overcol = "yellow"
+extendcolbar = "both"
+
 
 ncols = len(levels) -1    # number of colours we actually want to use
 if vmid is None:
@@ -68,25 +70,25 @@ if vmid is None:
     cmap = mpl_cm.get_cmap(cpal, ncols) 
     #    
 else:
-    # Explicit midpoint specified, make an off-centre (skewed) colourbar.
+    # Explicit midpoint specified: make an off-centre (skewed) colourbar.
     # We create a palette that extends an equal distance either side of
     # the midpoint, but then crop it to the value range selected.
     #
     # First, get whichever is the biggest distance above or below vmid:
     deltamax = max(vrange[1]-vmid, vmid-vrange[0]) 
-    vfull = [ vmid-deltamax, vmid+deltamax]  # Full range either side of vmid
+    vfull = [ vmid-deltamax, vmid+deltamax]         # Full range either side of vmid
     #
     # We'll map 0-1 to vfull[0]--vfull[1]   (size: 2*deltamax), 
     # so we need to know how far along vrange[0] and vrange[1] are.
-    vlo_frac = (vrange[0]-vfull[0]) / (2.0*deltamax) # 0 or greater
-    vhi_frac = (vrange[1]-vfull[0]) / (2.0*deltamax) # 1 or less
+    vlo_frac = (vrange[0]-vfull[0]) / (2.0*deltamax)    #  0 or greater
+    vhi_frac = (vrange[1]-vfull[0]) / (2.0*deltamax)    #  1 or less
     # (one of these two must be 0 or 1)
     #    
-    cmap_base = mpl_cm.get_cmap(cpal) # maps the range 0-1 to colours
+    cmap_base = mpl_cm.get_cmap(cpal)     # maps the range 0-1 to colours
     cols = cmap_base( np.linspace( vlo_frac, vhi_frac, ncols) )
     cmap = mpl_col.LinearSegmentedColormap.from_list('skewed',cols, N=ncols)
 
-#cmap.set_bad(  color=badcol  )
+#cmap.set_bad( color=badcol  )
 cmap.set_over( color=overcol )
 cmap.set_under(color=undercol)
 #----------------------------------------------
@@ -98,17 +100,22 @@ cmap.set_under(color=undercol)
 #----------------------------------------------
 # Start the plot:
 cmsize = [15,10]
+dpi_display = 96   # DPI of your screen
+# (Find this using, e.g. xdpyinfo | grep resolution )
+
 # A simple lat/lon projection, cutting at a sensible meridion:
 proj = ccrs.PlateCarree(central_longitude=10)
 
 
 
-fig = plt.figure(figsize=[x/2.54 for x in cmsize], dpi=96)
+# Create the Figure object:
+fig = plt.figure(figsize=[x/2.54 for x in cmsize], dpi=dpi_display)
 
 # Set up the Axes object as a cartopy GeoAxes object,
+#   http://scitools.org.uk/cartopy/docs/latest/matplotlib/geoaxes.html
 # i.e. one that is spatial-aware, so we can add coastlines etc later.)
-# (just doing the iplt.contourf will also do this,
-#  but we'd have to grab the gca() afterwards then)
+# (just doing the iplt.contourf would also create this,
+#  but we'd have to grab the gca() afterwards in that case)
 ax = plt.axes(projection=proj)
 #-----------------------------------------
 
@@ -142,28 +149,28 @@ else:
 cont = False
 
 if cont:
-    # Filled contours
-    # (always discrete colours, unless you cheat and have many colours)
+    # Filled contours:
+    # (always uses discrete colours, unless you cheat and have many colour levels)
     coldata = iplt.contourf(acube, axes=ax,  cmap=cmap, levels=levels, extend=extendcolbar)
 else:
-    # Shaded gridcells
-    # (discrete colours if the number is given when setting up cmap,
-    #  otherwise continuous colours)
+    # Shaded gridcells:
+    # (uses discrete colours if the number is given when setting up cmap,
+    #  otherwise uses continuous colours)
     coldata = iplt.pcolormesh(acube, axes=ax, cmap=cmap,vmin=vrange[0],vmax=vrange[1])
 
-# (We use the return value later when making the colorbar)
+# (We use the return value 'coldata' later, when making the colorbar)
 #-----------------------------------------
 
 
 #-----------------------------------------
-# Add contour lines highlighting some special value:
+# Add contour lines highlighting some special value(s):
 contlines = [-10.0, 10.0]
-# Set the negative linestyle to be solid, like positive.
-# (the default is 'dashed'; 'dotted' doesn't work)
+# Set the negative linestyle to be solid, just like positive.
+# (the default is 'dashed';  sadly 'dotted' doesn't work!)
 matplotlib.rcParams['contour.negative_linestyle'] = 'solid'
 
 cl = iplt.contour(acube, contlines, linewidths=1.5, 
-                  colors="gold", alpha=0.5 )
+                  colors="green", alpha=0.5 )
 #-----------------------------------------
 
 
@@ -174,16 +181,18 @@ cl = iplt.contour(acube, contlines, linewidths=1.5,
 # Add other annotations!
 
 # Coastlines:
-coastres = "50m" # or 10m (detailed) or 110m (simplified)
-coastlw = 1
+coastres = "50m"   # or 10m (detailed) or 110m (simplified)
+coastlw  = 1
+
+
 if coastlw > 0:
     ax.coastlines(coastres, linewidth=1, color="black")
 
 
 # Country borders:
-countryres = "10m"
+countryres  = "10m"
 countrylcol = "grey"
-countrylw = 0
+countrylw   = 0
 
 if countrylw > 0:
     if countryres is None:
@@ -194,7 +203,7 @@ if countrylw > 0:
         country_borders = cartopy.feature.NaturalEarthFeature('cultural',
                                                               'admin_0_boundary_lines_land',
                                                               countryres) 
-    ax.add_feature(country_borders, edgecolor=countrylcol,facecolor="",
+    ax.add_feature(country_borders, edgecolor=countrylcol, facecolor="",
                    linewidth=countrylw)
     # (Can use color and linestyle arguments too)
 
@@ -202,7 +211,7 @@ if countrylw > 0:
 # Rivers:
 riversres  = "10m"
 riverslcol = "blue"
-riverslw = 0
+riverslw   = 0
 
 if riverslw > 0:
     if riversres is None:
@@ -221,11 +230,12 @@ if riverslw > 0:
 
 #-----------------------------------------
 # Grid lines!
-dxgrid = 20
-dygrid = 20
+# This takes an unreasonable amount of effort :(
+dxgrid  = 20
+dygrid  = 20
 gridcol = "grey"
-xgridax = [True, False] # Label x-axes: bottom,top
-ygridax = [True, False] # Label y-axes: left,  right
+xgridax = [True, False]   # Label x-axes: bottom,top
+ygridax = [True, False]   # Label y-axes: left,  right
 
 
 
@@ -275,11 +285,11 @@ if label_grid:
 
 #----------------------------------------------------------------------
 # Add colorbar Axes:
-bar_pos = [0.05, 0.12, 0.9, 0.07]  # [l,b,w,h]
-bar_orientation = "horizontal"  # or "vertical"  or "none" (to skip)
+bar_pos = [0.05, 0.12, 0.9, 0.07]  # [left,bottom,width,height]
+bar_orientation = "horizontal"     # or "vertical"  or "none" (to skip)
 bar_ticklen  = 0
 bar_ticklabs = None    # Use defaults
-bar_label = u"Splendid temperature (°C)"
+bar_label    = u"Splendid temperature (°C)"
 
 
 if bar_orientation.lower() != "none":
@@ -313,10 +323,12 @@ marhsp=0
 fig.subplots_adjust(left  = marlft,  bottom = marbot,
                     right = marrgt,  top    = martop,
                     wspace= marwsp,  hspace = marhsp )
+# (You could use  plt.tight_layout()  
+#  but that won't apply to the colorbar Axes, 
+#  so it can be less helpful than in other cases.)
+
 plt.show()
 plt.close()
 #======================================================================
-
-
 
 
