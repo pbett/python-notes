@@ -11,34 +11,47 @@ import cartopy.crs as ccrs
 
 
 projns = [ccrs.PlateCarree(central_longitude= 10),
-          ccrs.PlateCarree(central_longitude=210),
-          ccrs.Mollweide(  central_longitude= 10),
-          ccrs.Robinson(   central_longitude= 10),
+          ccrs.PlateCarree(central_longitude=205),
           ccrs.AlbersEqualArea(central_longitude=10.0, central_latitude=52.0,
                                false_easting=0.0, false_northing=0.0, standard_parallels=(20.0, 50.0)),
+          ccrs.Mollweide(  central_longitude= 10),
+          ccrs.Mollweide(  central_longitude=205),
           ccrs.LambertAzimuthalEqualArea(central_longitude=10.0, central_latitude=52.0,
-                                         false_easting=0.0, false_northing=0.0) ]
+                                         false_easting=0.0, false_northing=0.0),	  
+          ccrs.Robinson(   central_longitude= 10),
+          ccrs.Robinson(   central_longitude=205),
+          ccrs.Orthographic(central_longitude=0.0, central_latitude=50.0) ]
 
 
-cmsize = [19,16]  # Fits my screen!
+xlims_pairs = [ None, None, [-20,40],
+                None, None, [-20,40],
+                None, None, None     ]
+
+ylims_pairs = [ None, None, [30,70],
+                None, None, [30,70],
+                None, None, None     ]
+
+dxgrid  = 20
+dygrid  = 20
+gridcol = "grey"
+
+cmsize = [25,16]  
 fig = plt.figure(figsize=[x/2.54 for x in cmsize], dpi=96)
 
 for i,proj in enumerate(projns):
-    ax = fig.add_subplot(3,2,i+1, projection=proj)
-    if i < 4:
+    ax = fig.add_subplot(3,3,i+1, projection=proj)
+    xlims = xlims_pairs[i]
+    ylims = ylims_pairs[i]
+    if (xlims is None) and (ylims is None):
         ax.set_global()
     else:
-        xlims = [-20,40]
-        ylims = [ 30,70]
         ax.set_extent(xlims+ylims, crs=ccrs.Geodetic())
     #
     ax.stock_img()
-    ax.coastlines("110m", linewidth=1, color="black")
-    #ax.coastlines("10m", linewidth=1, color="black")
+    ax.coastlines("110m", linewidth=0.5, color="black")
     #
-    dxgrid = 20
-    dygrid = 20
-    gridcol = "grey"
+    # Doing the gridlines we want 
+    # always takes more effort than anything else:
     gl = ax.gridlines(crs=ccrs.Geodetic(), draw_labels=False,
                       linewidth=0.5, color="grey")
     xlims_for_grid = [-180,180]
@@ -56,5 +69,5 @@ for i,proj in enumerate(projns):
 plt.tight_layout()
 plt.show()
 plt.close()
-#---------------------------------------------------
+#-------------------
 
