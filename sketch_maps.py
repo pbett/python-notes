@@ -1,6 +1,7 @@
 '''
 Illustrating basic "sketch-maps", without gridded data.
-e.g. http://scitools.org.uk/cartopy/docs/v0.13/matplotlib/intro.html
+e.g. https://scitools.org.uk/cartopy/docs/latest/matplotlib/intro.html
+
 '''
 import cartopy
 import cartopy.crs as ccrs
