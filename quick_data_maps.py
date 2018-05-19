@@ -54,7 +54,7 @@ vrange = [-35,35]
 vstep  = 5.0
 levels = np.arange(vrange[0], vrange[1]+vstep, vstep)
 # Let's use a more intuitive, diverging colour scheme while we're at it:
-qplt.contourf(acube, levels, cmap="RdBu") ; qplt.plt.gca().coastlines()  ;  qplt.show()
+qplt.contourf(acube, levels, cmap="RdBu_r") ; qplt.plt.gca().coastlines()  ;  qplt.show()
 #--------------------------------------------
 
 
