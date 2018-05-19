@@ -18,7 +18,7 @@ The mapping demos are:
 
 * [quick_data_maps.py](quick_data_maps.py):
 
-    <img src="quick_maps_1simplest.png" width="200px" />, <img src="quick_maps_2simplestcontourf_withcoasts.png" width="200px" />, <img src="quick_maps_2simplestpcolormesh_withcoasts.png" width="200px" />, <img src="quick_maps_3explicitlevels_diverging.png" width="200px" />, <img src="quick_maps_3explicitlevels.png" width="200px" />, <img src="quick_maps_3tenlevels.png" width="200px" />
+    <img src="quick_maps_1simplest.png" width="200px" />, <img src="quick_maps_2simplestcontourf_withcoasts.png" width="200px" />, <img src="quick_maps_2simplestpcolormesh_withcoasts.png" width="200px" />, <img src="quick_maps_3tenlevels.png" width="200px" />, <img src="quick_maps_3explicitlevels.png" width="200px" />, <img src="quick_maps_3explicitlevels_diverging.png" width="200px" />
 
 * [full_iris_plot.py](full_iris_plot.py)
 
