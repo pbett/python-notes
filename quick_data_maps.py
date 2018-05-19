@@ -1,6 +1,7 @@
 '''
 Illustrating quick-and-easy ways of plotting gridded data,
 using the iris package and its quickplot module.
+https://scitools.org.uk/iris/docs/latest/iris/iris/quickplot.html
 
 '''
 import iris
