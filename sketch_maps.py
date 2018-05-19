@@ -38,7 +38,7 @@ plt.show()  ;  plt.close()
 
 
 
-
+# Final example:
 proj = ccrs.Orthographic(central_longitude=0.0, central_latitude=50.0)
 ax = plt.axes(projection=proj)
 ax.add_feature(cartopy.feature.LAND)
@@ -47,9 +47,6 @@ ax.add_feature(cartopy.feature.COASTLINE) #, edgecolor="brown")
 ax.gridlines()
 plt.tight_layout()
 plt.show()  ;  plt.close()
-# Other features are BORDERS, LAKES, RIVERS.
+
+# Other cartopy features include BORDERS, LAKES, RIVERS.
 # http://scitools.org.uk/cartopy/docs/v0.13/matplotlib/feature_interface.html
-
-
-
-
