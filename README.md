@@ -5,6 +5,8 @@ In particular, there's a focus on creating maps (using [cartopy](https://scitool
 
 I might add other things about plotting using [matplotlib](https://matplotlib.org/) more generally too.
 
+These are used to make [gists](https://gist.github.com/pbett), which I can then embed in my [web site](https://pbett.wordpress.com/datafun/plotting-maps/) in a more tutorial-like fashion. However, unlike the code-spipped gists, the scripts here should be fully executable from top to bottom.
+
 
 The mapping demos are:
 * [sketch_maps.py](sketch_maps.py):
