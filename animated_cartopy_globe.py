@@ -99,7 +99,7 @@ writer = mplanim.ImageMagickWriter(fps=fps)
 # (this is the stage when it is actually generated,
 #  and takes time - about 40 mins on my laptop!)
 print "About to save animation:" 
-anim.save('animated_globe_newtest.gif', dpi=96, writer=writer)
+anim.save('animated_globe.gif', dpi=96, writer=writer)
 
 
 # Alternatively, you can display the animation
